@@ -61,6 +61,7 @@ bool Matrix::CanBeTransposed(const Matrix& other) const {
   }
   return true;
 }
+
 long long Matrix::Determinant() const {
   switch (size_) {
     case 1:return (matrix_[0][0]);
@@ -85,6 +86,55 @@ long long Matrix::Determinant() const {
     }
   }
 
+}
+
+size_t Matrix::FindMaxDeterminant() {
+  if (size_ <= 2)
+    return AbsDeterminant();
+  size_t max_det = AbsDeterminant();
+  Matrix transformed = *this;
+  // перебираем белые элементы
+  for (size_t white1_x = 0; white1_x < size_; white1_x += 2) {
+    for (size_t white1_y = 0; white1_y < size_; white1_y += 2) {
+      for (size_t white2_x = 0; white2_x < size_; white2_x += 2) {
+        for (size_t white2_y = 0; white2_y < size_; white2_y += 2) {
+          std::swap(transformed.matrix_[white1_x][white1_y], transformed.matrix_[white2_x][white2_y]);
+          max_det = std::max(max_det, transformed.AbsDeterminant());
+        }
+      }
+    }
+  }
+  for (size_t white1_x = 1; white1_x < size_; white1_x += 2) {
+    for (size_t white1_y = 1; white1_y < size_; white1_y += 2) {
+      for (size_t white2_x = 1; white2_x < size_; white2_x += 2) {
+        for (size_t white2_y = 1; white2_y < size_; white2_y += 2) {
+          std::swap(transformed.matrix_[white1_x][white1_y], transformed.matrix_[white2_x][white2_y]);
+          max_det = std::max(max_det, transformed.AbsDeterminant());
+        }
+      }
+    }
+  }
+  return max_det;
+}
+
+size_t Matrix::AbsDeterminant() const {
+  return std::abs(Determinant());
+}
+
+size_t Matrix::LookThroughBlack() {
+  std::vector<std::pair<size_t, size_t>> black_coors;
+  for (int i = 1; i < size_; i += 2) {
+    for (int j = 0; j < size_; j += 2) {
+      black_coors.emplace_back(i, j);
+    }
+  }
+  for (int i = 0; i < size_; i += 2) {
+    for (int j = 1; j < size_; j += 2) {
+      black_coors.emplace_back(i, j);
+    }
+  }
+  size_t max_det = AbsDeterminant();
+  return 0;
 }
 
 
