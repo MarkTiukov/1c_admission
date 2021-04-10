@@ -7,13 +7,12 @@ class Matrix {
   Matrix() = delete;
   Matrix(const std::vector<std::vector<int>>& matrix);
 
-  bool CanBeTransformed(const Matrix& other) const;
+  bool CanBeTransposed(const Matrix& other) const;
+  long long Determinant() const;
 
  private:
-  void Determinant() const;
   void ReflectFromMain();
   void ReflectFromSecondary();
-
 
  private:
   std::vector<std::vector<int>> matrix_;
